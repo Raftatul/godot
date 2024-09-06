@@ -155,7 +155,7 @@ public:
 
 	enum LayoutPivotMode {
 		PIVOT_MODE_PIXEL,
-		PIVOT_MODE_PERCENT,
+		PIVOT_MODE_RATIO,
 	};
 
 private:
@@ -199,7 +199,7 @@ private:
 		Vector2 scale = Vector2(1, 1);
 		LayoutPivotMode pivot_mode = PIVOT_MODE_PIXEL;
 		Vector2 pivot_offset;
-		Vector2 pivot_offset_percent;
+		Vector2 pivot_offset_ratio;
 
 		Point2 pos_cache;
 		Size2 size_cache;
@@ -491,8 +491,8 @@ public:
 	LayoutPivotMode get_pivot_mode() const;
 	void set_pivot_offset(const Vector2 &p_pivot);
 	Vector2 get_pivot_offset() const;
-	void set_pivot_offset_percent(const Vector2 &p_pivot_percent);
-	Vector2 get_pivot_offset_percent() const;
+	void set_pivot_offset_ratio(const Vector2 &p_pivot_ratio);
+	Vector2 get_pivot_offset_ratio() const;
 
 	void update_minimum_size();
 

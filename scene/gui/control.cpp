@@ -503,7 +503,7 @@ void Control::_validate_property(PropertyInfo &p_property) const {
 		// If the parent is a container, display only container-related properties.
 		if (p_property.name.begins_with("anchor_") || p_property.name.begins_with("offset_") || p_property.name.begins_with("grow_") || p_property.name == "anchors_preset") {
 			p_property.usage ^= PROPERTY_USAGE_DEFAULT;
-		} else if (p_property.name == "position" || p_property.name == "rotation" || p_property.name == "scale" || p_property.name == "size" || p_property.name == "pivot_mode" || p_property.name == "pivot_offset" || p_property.name == "pivot_offset_percent") {
+		} else if (p_property.name == "position" || p_property.name == "rotation" || p_property.name == "scale" || p_property.name == "size" || p_property.name == "pivot_mode" || p_property.name == "pivot_offset" || p_property.name == "pivot_offset_ratio") {
 			p_property.usage = PROPERTY_USAGE_EDITOR | PROPERTY_USAGE_READ_ONLY;
 		} else if (p_property.name == "layout_mode") {
 			// Set the layout mode to be disabled with the proper value.
@@ -578,8 +578,8 @@ void Control::_validate_property(PropertyInfo &p_property) const {
 		}
 	}
 
-	if (p_property.name == "pivot_offset_percent") {
-		if (get_pivot_mode() != PIVOT_MODE_PERCENT) {
+	if (p_property.name == "pivot_offset_ratio") {
+		if (get_pivot_mode() != PIVOT_MODE_RATIO) {
 			p_property.usage = PROPERTY_HINT_NONE;
 		}
 	}
@@ -1473,8 +1473,8 @@ void Control::set_size(const Size2 &p_size, bool p_keep_offsets) {
 		new_size.y = min.y;
 	}
 
-	if (get_pivot_mode() == PIVOT_MODE_PERCENT) {
-		set_pivot_offset(new_size * data.pivot_offset_percent);
+	if (get_pivot_mode() == PIVOT_MODE_RATIO) {
+		set_pivot_offset(new_size * data.pivot_offset_ratio);
 	}
 
 #ifdef TOOLS_ENABLED
@@ -1618,21 +1618,21 @@ Vector2 Control::get_pivot_offset() const {
 	return data.pivot_offset;
 }
 
-void Control::set_pivot_offset_percent(const Vector2 &p_pivot_percent) {
+void Control::set_pivot_offset_ratio(const Vector2 &p_pivot_ratio) {
 	ERR_MAIN_THREAD_GUARD;
-	if (data.pivot_offset_percent == p_pivot_percent) {
+	if (data.pivot_offset_ratio == p_pivot_ratio) {
 		return;
 	}
 
-	data.pivot_offset_percent = p_pivot_percent;
-	set_pivot_offset(data.size_cache * p_pivot_percent);
+	data.pivot_offset_ratio = p_pivot_ratio;
+	set_pivot_offset(data.size_cache * p_pivot_ratio);
 	queue_redraw();
 	_notify_transform();
 }
 
-Vector2 Control::get_pivot_offset_percent() const {
+Vector2 Control::get_pivot_offset_ratio() const {
 	ERR_READ_THREAD_GUARD_V(Vector2());
-	return data.pivot_offset_percent;
+	return data.pivot_offset_ratio;
 }
 
 /// Sizes.
@@ -1784,8 +1784,8 @@ void Control::_size_changed() {
 	}
 	if (size_changed) {
 		data.size_cache = new_size_cache;
-		if (get_pivot_mode() == PIVOT_MODE_PERCENT) {
-			set_pivot_offset(new_size_cache * data.pivot_offset_percent);
+		if (get_pivot_mode() == PIVOT_MODE_RATIO) {
+			set_pivot_offset(new_size_cache * data.pivot_offset_ratio);
 		}
 	}
 
@@ -3450,7 +3450,7 @@ void Control::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_scale", "scale"), &Control::set_scale);
 	ClassDB::bind_method(D_METHOD("set_pivot_mode", "pivot_mode"), &Control::set_pivot_mode);
 	ClassDB::bind_method(D_METHOD("set_pivot_offset", "pivot_offset"), &Control::set_pivot_offset);
-	ClassDB::bind_method(D_METHOD("set_pivot_offset_percent", "pivot_offset_percent"), &Control::set_pivot_offset_percent);
+	ClassDB::bind_method(D_METHOD("set_pivot_offset_ratio", "pivot_offset_ratio"), &Control::set_pivot_offset_ratio);
 	ClassDB::bind_method(D_METHOD("get_begin"), &Control::get_begin);
 	ClassDB::bind_method(D_METHOD("get_end"), &Control::get_end);
 	ClassDB::bind_method(D_METHOD("get_position"), &Control::get_position);
@@ -3460,7 +3460,7 @@ void Control::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_scale"), &Control::get_scale);
 	ClassDB::bind_method(D_METHOD("get_pivot_mode"), &Control::get_pivot_mode);
 	ClassDB::bind_method(D_METHOD("get_pivot_offset"), &Control::get_pivot_offset);
-	ClassDB::bind_method(D_METHOD("get_pivot_offset_percent"), &Control::get_pivot_offset_percent);
+	ClassDB::bind_method(D_METHOD("get_pivot_offset_ratio"), &Control::get_pivot_offset_ratio);
 	ClassDB::bind_method(D_METHOD("get_custom_minimum_size"), &Control::get_custom_minimum_size);
 	ClassDB::bind_method(D_METHOD("get_parent_area_size"), &Control::get_parent_area_size);
 	ClassDB::bind_method(D_METHOD("get_global_position"), &Control::get_global_position);
@@ -3634,7 +3634,7 @@ void Control::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "scale"), "set_scale", "get_scale");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "pivot_mode", PROPERTY_HINT_ENUM, "Pixel,Percent"), "set_pivot_mode", "get_pivot_mode");
 	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "pivot_offset", PROPERTY_HINT_NONE, "suffix:px"), "set_pivot_offset", "get_pivot_offset");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "pivot_offset_percent", PROPERTY_HINT_RANGE, "0,1,0.01,or_less,or_greater,suffix:%"), "set_pivot_offset_percent", "get_pivot_offset_percent");
+	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "pivot_offset_ratio", PROPERTY_HINT_RANGE, "0,1,0.01,or_less,or_greater,suffix:%"), "set_pivot_offset_ratio", "get_pivot_offset_ratio");
 
 	ADD_SUBGROUP("Container Sizing", "size_flags_");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "size_flags_horizontal", PROPERTY_HINT_FLAGS, "Fill:1,Expand:2,Shrink Center:4,Shrink End:8"), "set_h_size_flags", "get_h_size_flags");
