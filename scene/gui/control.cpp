@@ -3632,7 +3632,7 @@ void Control::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "rotation", PROPERTY_HINT_RANGE, "-360,360,0.1,or_less,or_greater,radians_as_degrees"), "set_rotation", "get_rotation");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "rotation_degrees", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NONE), "set_rotation_degrees", "get_rotation_degrees");
 	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "scale"), "set_scale", "get_scale");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "pivot_mode", PROPERTY_HINT_ENUM, "Pixel,Percent"), "set_pivot_mode", "get_pivot_mode");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "pivot_mode", PROPERTY_HINT_ENUM, "Pixel,Ratio"), "set_pivot_mode", "get_pivot_mode");
 	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "pivot_offset", PROPERTY_HINT_NONE, "suffix:px"), "set_pivot_offset", "get_pivot_offset");
 	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "pivot_offset_ratio", PROPERTY_HINT_RANGE, "0,1,0.01,or_less,or_greater,suffix:%"), "set_pivot_offset_ratio", "get_pivot_offset_ratio");
 
