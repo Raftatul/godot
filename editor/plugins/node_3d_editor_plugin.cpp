@@ -5260,6 +5260,11 @@ void Node3DEditorViewport::update_transform(bool p_shift) {
 					break;
 			}
 
+			WARN_PRINT("Ray pos: " + ray_pos);
+			WARN_PRINT("Ray: " + ray);
+			WARN_PRINT("Click ray pos: " + _edit.click_ray_pos);
+			WARN_PRINT("Click ray: " + _edit.click_ray);
+
 			Vector3 intersection;
 			if (!plane.intersects_ray(ray_pos, ray, &intersection)) {
 				break;
@@ -5269,6 +5274,8 @@ void Node3DEditorViewport::update_transform(bool p_shift) {
 			if (!plane.intersects_ray(_edit.click_ray_pos, _edit.click_ray, &click)) {
 				break;
 			}
+
+
 
 			Vector3 motion = intersection - click;
 			if (_edit.plane != TRANSFORM_VIEW) {
@@ -5293,6 +5300,14 @@ void Node3DEditorViewport::update_transform(bool p_shift) {
 			}
 
 			apply_transform(motion, snap);
+
+			WARN_PRINT(motion);
+			if (Input::get_singleton()->is_key_pressed(Key::ALT)) {
+				// Input::get_singleton()->set_mouse_mode(Input::MouseMode::MOUSE_MODE_CAPTURED);
+				get_camera_3d()->set_position(motion);
+			} else {
+				Input::get_singleton()->set_mouse_mode(Input::MouseMode::MOUSE_MODE_VISIBLE);
+			}
 		} break;
 
 		case TRANSFORM_ROTATE: {
