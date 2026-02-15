@@ -1906,10 +1906,6 @@ void EditorInspectorCategory::_handle_menu_option(int p_option) {
 				}
 			}
 
-			if (category_name != pastebin_category_name) {
-				break;
-			}
-
 			EditorUndoRedoManager *ur = EditorUndoRedoManager::get_singleton();
 			if (const MultiNodeEdit *multi_node_edit = Object::cast_to<MultiNodeEdit>(object)) {
 				const Node *es = EditorNode::get_singleton()->get_edited_scene();
