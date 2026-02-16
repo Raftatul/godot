@@ -1428,6 +1428,12 @@ void EditorProperty::menu_option(int p_option) {
 					return;
 				}
 			}
+
+			Dictionary dict = InspectorDock::get_inspector_singleton()->get_property_clipboard();
+			if (dict.has("@pastebin_category_name") || dict.has("@pastebin_section_name")) {
+				return;
+			}
+
 			emit_changed(property, EditorInspector::get_property_clipboard());
 		} break;
 		case MENU_COPY_PROPERTY_PATH: {
@@ -1993,11 +1999,8 @@ void EditorInspectorCategory::_popup_context_menu(const Point2i &p_position) {
 		} else {
 			const Dictionary clipboard = InspectorDock::get_inspector_singleton()->get_property_clipboard();
 
-			menu->add_item(TTRC("Copy Category Values"), MENU_COPY_VALUE);
-			menu->set_item_icon(menu->get_item_index(MENU_COPY_VALUE), theme_cache.icon_copy);
-
-			menu->add_item(TTRC("Paste Category Values"), MENU_PASTE_VALUE);
-			menu->set_item_icon(menu->get_item_index(MENU_PASTE_VALUE), theme_cache.icon_paste);
+			menu->add_icon_item(theme_cache.icon_copy, TTRC("Copy Section Values"), MENU_COPY_VALUE);
+			menu->add_icon_item(theme_cache.icon_paste, TTRC("Paste Section Values"), MENU_PASTE_VALUE);
 
 			menu->add_item(TTRC("Open Documentation"), MENU_OPEN_DOCS);
 			menu->set_item_disabled(-1, !EditorHelp::get_doc_data()->class_list.has(doc_class_name));
@@ -2539,7 +2542,7 @@ void EditorInspectorSection::gui_input(const Ref<InputEvent> &p_event) {
 				fold();
 			}
 		}
-	} else if ((!checkable || checked) && inspector_path != "" && mb.is_valid() && mb->is_pressed() && mb->get_button_index() == MouseButton::RIGHT) {
+	} else if ((!checkable || checked) && !inspector_path.is_empty() && mb.is_valid() && mb->is_pressed() && mb->get_button_index() == MouseButton::RIGHT) {
 		accept_event();
 		_update_popup();
 		menu->set_position(get_screen_position() + get_local_mouse_position());
@@ -2689,19 +2692,14 @@ void EditorInspectorSection::update_property() {
 }
 
 void EditorInspectorSection::_update_popup() {
-	if (menu) {
-		menu->clear();
-	} else {
+	if (!menu) {
 		menu = memnew(PopupMenu);
 		add_child(menu);
 		menu->connect(SceneStringName(id_pressed), callable_mp(this, &EditorInspectorSection::menu_option));
+
+		menu->add_icon_item(theme_cache.icon_copy, TTRC("Copy Section Values"), MENU_COPY_VALUE);
+		menu->add_icon_item(theme_cache.icon_paste, TTRC("Paste Section Values"), MENU_PASTE_VALUE);
 	}
-
-	menu->add_item(TTRC("Copy Section Values"), MENU_COPY_VALUE);
-	menu->add_item(TTRC("Paste Section Values"), MENU_PASTE_VALUE);
-
-	menu->set_item_icon(menu->get_item_index(MENU_COPY_VALUE), theme_cache.icon_copy);
-	menu->set_item_icon(menu->get_item_index(MENU_PASTE_VALUE), theme_cache.icon_paste);
 }
 
 void EditorInspectorSection::_collect_properties(LocalVector<String> &r_properties) const {
