@@ -4109,6 +4109,11 @@ void EditorInspector::update_tree() {
 		return;
 	}
 
+	if (!is_visible_in_tree()) {
+		update_tree_pending = true;
+		return;
+	}
+
 	bool root_inspector_was_following_focus = get_root_inspector()->is_following_focus();
 	if (root_inspector_was_following_focus) {
 		// Temporarily disable focus following on the root inspector to avoid jumping while the inspector is updating.
@@ -6074,7 +6079,7 @@ void EditorInspector::add_custom_property_description(const String &p_class, con
 String EditorInspector::get_custom_property_description(const String &p_property) const {
 	HashMap<String, String>::ConstIterator E = custom_property_descriptions.find(p_property);
 	if (E) {
-		return E->value;
+		return TTR(E->value);
 	}
 	return "";
 }
@@ -6176,8 +6181,6 @@ void EditorInspector::_bind_methods() {
 }
 
 EditorInspector::EditorInspector() {
-	object = nullptr;
-
 	base_vbox = memnew(VBoxContainer);
 	base_vbox->set_theme_type_variation(SNAME("EditorInspectorContainer"));
 	base_vbox->set_h_size_flags(SIZE_EXPAND_FILL);
