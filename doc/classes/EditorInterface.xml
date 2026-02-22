@@ -223,6 +223,11 @@
 				Returns the editor's [EditorResourcePreview] instance.
 			</description>
 		</method>
+		<method name="get_run_instances_dialog" qualifiers="const">
+			<return type="RunInstancesDialog" />
+			<description>
+			</description>
+		</method>
 		<method name="get_script_editor" qualifiers="const">
 			<return type="ScriptEditor" />
 			<description>

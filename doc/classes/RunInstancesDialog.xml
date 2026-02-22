@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="RunInstancesDialog" inherits="AcceptDialog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../class.xsd">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<tutorials>
+	</tutorials>
+	<methods>
+		<method name="get_instance_count" qualifiers="const">
+			<return type="int" />
+			<description>
+			</description>
+		</method>
+		<method name="get_stored_data" qualifiers="const">
+			<return type="Dictionary[]" />
+			<description>
+			</description>
+		</method>
+		<method name="set_instance_count">
+			<return type="void" />
+			<param index="0" name="count" type="int" />
+			<param index="1" name="force_debug_mode" type="bool" />
+			<description>
+			</description>
+		</method>
+		<method name="set_stored_data">
+			<return type="void" />
+			<param index="0" name="data" type="Dictionary[]" />
+			<description>
+			</description>
+		</method>
+	</methods>
+	<members>
+		<member name="title" type="String" setter="set_title" getter="get_title" overrides="Window" default="&quot;Run Instances&quot;" />
+	</members>
+</class>
