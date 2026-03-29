@@ -4620,7 +4620,13 @@ void EditorInspector::update_tree() {
 
 				Color c = sscolor;
 				c.a /= level;
-				section->setup((doc_name.is_empty() ? acc_path : String(doc_name) + (acc_path.is_empty() ? "" : "/" + acc_path)), acc_path, label, object, c, use_folding, section_depth, level);
+
+				String current_group = group_base == "" ? group : group_base;
+				String current_subgroup = subgroup_base == "" ? subgroup : subgroup_base;
+				String inspector_path = "/";
+				inspector_path = inspector_path.join(Vector<String>({ doc_name, current_group, current_subgroup }));
+				inspector_path.remove_at(inspector_path.length() - 1);
+				section->setup(inspector_path, acc_path, label, object, c, use_folding, section_depth, level);
 				section->set_tooltip_text(tooltip);
 
 				section->connect("section_toggled_by_user", callable_mp(this, &EditorInspector::_section_toggled_by_user));
